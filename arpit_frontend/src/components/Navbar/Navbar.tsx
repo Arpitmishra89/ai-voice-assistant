@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Settings, Mic } from 'lucide-react';
 import { StatusIndicator } from '../StatusIndicator/StatusIndicator';
 import type { ConnectionStatus, ListeningStatus } from '../../types/voice';
+import { LanguageSelector } from '../LanguageSelector/LanguageSelector';
 
 interface NavbarProps {
   connectionStatus: ConnectionStatus;
@@ -29,6 +30,7 @@ export function Navbar({ connectionStatus, listeningStatus, onSettingsClick }: N
 
         <div className="flex items-center gap-4">
           <StatusIndicator connectionStatus={connectionStatus} listeningStatus={listeningStatus} />
+          <LanguageSelector/>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

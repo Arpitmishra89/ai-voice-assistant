@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Mic, MicOff, RotateCcw, Circle } from 'lucide-react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface AudioControlsProps {
   isListening: boolean;
@@ -24,6 +25,7 @@ export function AudioControls({
   onToggleMute,
   onReset,
 }: AudioControlsProps) {
+  const t = useTranslation();
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -37,7 +39,7 @@ export function AudioControls({
         onClick={onToggleMute}
         disabled={!isListening}
         className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
-        aria-label={isMuted ? 'Unmute microphone' : 'Mute microphone'}
+        aria-label={isMuted ? t.unmuteMic : t.muteMic}
       >
         {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
       </motion.button>
@@ -51,10 +53,10 @@ export function AudioControls({
             ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
             : 'bg-violet-600 text-white hover:bg-violet-500'
         }`}
-        aria-label={isListening ? 'Stop listening' : 'Start listening'}
+        aria-label={isListening ? t.stop : t.start}
       >
         <Circle className={`h-4 w-4 ${isListening ? 'fill-red-400' : ''}`} />
-        {isListening ? 'Stop' : 'Start'}
+        {isListening ? t.stop : t.start}
       </motion.button>
 
       <motion.button
@@ -62,7 +64,7 @@ export function AudioControls({
         whileTap={{ scale: 0.95 }}
         onClick={onReset}
         className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
-        aria-label="Reset session"
+        aria-label={t.resetSession}
       >
         <RotateCcw className="h-4 w-4" />
       </motion.button>

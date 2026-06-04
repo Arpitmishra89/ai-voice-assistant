@@ -2,12 +2,15 @@ import { memo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageBubble } from './MessageBubble';
 import type { Message } from '../../types/message';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface ConversationPanelProps {
   messages: Message[];
 }
 
 function ConversationPanelInner({ messages }: ConversationPanelProps) {
+  const t = useTranslation();
+  
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ function ConversationPanelInner({ messages }: ConversationPanelProps) {
               <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
                 <span className="text-xl">🎙️</span>
               </div>
-              <p className="text-sm text-zinc-500">How can I help you today?</p>
+              <p className="text-sm text-zinc-500">{t.greeting}</p>
             </div>
           </motion.div>
         )}

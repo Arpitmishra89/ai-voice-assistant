@@ -1,25 +1,27 @@
 import { motion } from 'framer-motion';
 import type { ConnectionStatus, ListeningStatus } from '../../types/voice';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface StatusIndicatorProps {
   connectionStatus: ConnectionStatus;
   listeningStatus: ListeningStatus;
 }
 
-const statusConfig: Record<string, { color: string; label: string }> = {
-  connected: { color: 'bg-emerald-500', label: 'Connected' },
-  connecting: { color: 'bg-amber-500', label: 'Connecting' },
-  disconnected: { color: 'bg-red-500', label: 'Disconnected' },
-  reconnecting: { color: 'bg-amber-500', label: 'Reconnecting' },
-};
 
-const listeningConfig = {
-  idle: { color: 'bg-zinc-500', label: 'Idle' },
-  listening: { color: 'bg-emerald-500', label: 'Listening' },
-  processing: { color: 'bg-amber-500', label: 'Processing' },
-};
 
 export function StatusIndicator({ connectionStatus, listeningStatus }: StatusIndicatorProps) {
+  const t = useTranslation();
+  const statusConfig: Record<string, { color: string; label: string }> = {
+  connected: { color: 'bg-emerald-500', label: t.connected },
+  connecting: { color: 'bg-amber-500', label: t.connecting },
+  disconnected: { color: 'bg-red-500', label: t.disconnected },
+  reconnecting: { color: 'bg-amber-500', label: t.reconnecting },
+};
+  const listeningConfig = {
+  idle: { color: 'bg-zinc-500', label: t.idle },
+  listening: { color: 'bg-emerald-500', label: t.listening },
+  processing: { color: 'bg-amber-500', label: t.processing },
+};
   const conn = statusConfig[connectionStatus] ?? { color: 'bg-zinc-500', label: 'Unknown' };
   const listen = listeningConfig[listeningStatus] ?? { color: 'bg-zinc-500', label: 'Unknown' };
 
