@@ -1,0 +1,224 @@
+Build a production-grade AI Voice Agent Frontend using React (Vite + TypeScript) with a premium modern UI and dark theme.
+
+OBJECTIVE:
+Create a frontend-only AI voice assistant interface similar in quality to ChatGPT Voice, Gemini Live, Pi AI, or ElevenLabs Conversational AI. The frontend should capture microphone input, display visual listening indicators, and maintain conversation history. Do NOT implement speech-to-text, AI responses, or backend logic. The application should be designed so that a backend voice agent can be integrated later with minimal changes.
+
+DESIGN REQUIREMENTS:
+
+1. THEME & LOOK
+- Use a premium dark theme.
+- Background should be near-black with subtle gradients.
+- Modern glassmorphism effects where appropriate.
+- Smooth shadows and glowing accents.
+- Professional typography.
+- Fully responsive for desktop, tablet, and mobile.
+- Design should feel like a modern AI product used in production.
+
+2. MAIN VOICE INTERFACE
+- Place a large microphone button exactly in the center of the screen.
+- Mic button should be circular and visually striking.
+- Add hover animations.
+- Add click/tap animations.
+- Add smooth transitions.
+- Support keyboard accessibility.
+
+MIC STATES:
+
+Idle State:
+- Subtle glow.
+- Gentle pulsing animation.
+- Indicates readiness.
+
+Listening State:
+- Request microphone permissions.
+- Start microphone capture using browser APIs.
+- Show active listening status.
+- Change visual state of microphone.
+- Trigger animated waveform visualization around the microphone.
+
+3. WAVEFORM VISUALIZATION
+When listening:
+- Display animated waveform rings around the microphone.
+- Use multiple concentric layers.
+- Use Web Audio API to measure microphone volume level.
+- Waveforms should react dynamically to audio intensity.
+- Scale and animate based on voice input level.
+- The waveform should clearly indicate that the browser is actively listening.
+- No speech-to-text conversion is required.
+
+Possible implementation:
+- Web Audio API
+- AnalyserNode
+- SVG or Canvas
+- Framer Motion animations
+
+4. CONVERSATION PANEL
+Below the microphone create a modern conversation panel.
+
+Default assistant message:
+“How can I help you today?”
+
+Requirements:
+- Scrollable chat history.
+- Smooth auto-scroll.
+- Modern chat bubble design.
+- Timestamp support.
+- User messages.
+- Assistant messages.
+- Clean architecture for future backend integration.
+
+Suggested type:
+
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
+
+Even though speech-to-text is not implemented, build reusable conversation components that can easily consume future backend data.
+
+5. TOP NAVIGATION BAR
+Create a minimal premium navbar containing:
+- Application logo
+- Assistant name
+- Connection status indicator
+- Settings button
+
+Example:
+Voice Agent • Connected
+
+6. ADDITIONAL FEATURES
+Implement modern features commonly found in premium AI products:
+
+Audio Controls:
+- Start listening
+- Stop listening
+- Mute microphone
+- Reset session
+
+Status Indicators:
+- Listening
+- Idle
+- Processing
+- Connected
+- Disconnected
+
+Accessibility:
+- Keyboard navigation
+- ARIA labels
+- Screen reader support
+
+Responsiveness:
+- Mobile-first design
+- Smooth adaptation to all screen sizes
+
+7. ANIMATIONS
+Use Framer Motion extensively.
+
+Include:
+- Page entrance animations
+- Waveform animations
+- Button interactions
+- Fade transitions
+- Scale transitions
+- Glow effects
+
+Animations should feel polished and premium, not excessive.
+
+8. STATE MANAGEMENT
+Use React hooks and clean architecture.
+
+Suggested state:
+
+interface VoiceState {
+  isListening: boolean;
+  isConnected: boolean;
+  audioLevel: number;
+  messages: Message[];
+}
+
+9. PROJECT STRUCTURE
+
+src/
+├── components/
+│   ├── MicButton/
+│   ├── Waveform/
+│   ├── ConversationPanel/
+│   ├── Navbar/
+│   ├── StatusIndicator/
+│   ├── AudioControls/
+│
+├── hooks/
+│   ├── useMicrophone.ts
+│   ├── useAudioLevel.ts
+│
+├── services/
+│   ├── audioService.ts
+│
+├── types/
+│   ├── voice.ts
+│
+├── pages/
+│   ├── Home.tsx
+│
+├── App.tsx
+├── main.tsx
+
+10. TECH STACK
+Required:
+- React 18+
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Lucide React Icons
+
+Browser APIs:
+- navigator.mediaDevices.getUserMedia()
+- AudioContext
+- AnalyserNode
+
+11. CODE QUALITY
+Requirements:
+- Production-grade code.
+- Strong TypeScript typing.
+- Reusable components.
+- Modular architecture.
+- Proper cleanup of audio streams.
+- Proper cleanup of AudioContext.
+- No memory leaks.
+- Error handling for denied microphone permissions.
+- Error boundaries where appropriate.
+
+12. FUTURE BACKEND COMPATIBILITY
+Design architecture so that the microphone component can later stream audio to:
+- FastAPI backend
+- WebSocket server
+- OpenAI Realtime API
+- LiveKit
+- Deepgram
+- ElevenLabs
+- Custom AI agents
+
+Create clear interfaces and callback hooks that make backend integration straightforward.
+
+13. BONUS PREMIUM FEATURES
+If possible, add:
+- Smooth ambient background animation.
+- Dynamic glow based on microphone level.
+- Floating particles around waveform.
+- Session duration timer.
+- Dark/light theme architecture (default dark).
+- Glassmorphism conversation container.
+- Animated status badges.
+
+DELIVERABLES:
+- Complete React + TypeScript application.
+- Tailwind configuration.
+- All reusable components.
+- Responsive design.
+- Waveform visualization connected to microphone volume.
+- Production-ready folder structure.
+- Clean code.
+- Setup instructions.
+- Fully functional frontend that can later be connected to any backend voice AI system.

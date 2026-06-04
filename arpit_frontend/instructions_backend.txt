@@ -1,0 +1,389 @@
+Build a COMPLETE production-ready backend for a real-time AI Voice Agent using LiveKit Agents SDK.
+
+IMPORTANT GOAL:
+
+After code generation is complete, I should only need to:
+
+1. Create a `.env` file from `.env.example`
+2. Add my API keys
+3. Install dependencies
+4. Run locally using LiveKit CLI
+5. Deploy to LiveKit Cloud using `lk agent deploy`
+
+No placeholders.
+No TODOs.
+No pseudocode.
+Generate fully runnable code.
+
+---
+
+## TECH STACK
+
+Language:
+
+* Python 3.11+
+
+Frameworks:
+
+* LiveKit Agents SDK (latest stable version)
+* FastAPI
+* Pydantic Settings
+* python-dotenv
+
+Providers:
+
+* Deepgram Streaming STT
+* Deepgram TTS
+* Groq LLM
+
+Voice Features:
+
+* Silero VAD
+* Turn Detection
+* Barge-in / interruption handling
+* Streaming audio pipeline
+
+Deployment:
+
+* LiveKit Cloud Agent Deployment
+
+---
+
+## VOICE PIPELINE
+
+Implement:
+
+User Speech
+↓
+Silero VAD
+↓
+Deepgram Streaming STT
+↓
+Groq LLM
+↓
+Deepgram TTS
+↓
+Audio Response
+
+The agent should behave similarly to ChatGPT Voice.
+
+---
+
+## REQUIRED FEATURES
+
+1. Voice Activity Detection
+
+Use Silero VAD.
+
+Requirements:
+
+* Detect speech start
+* Detect speech end
+* Minimize unnecessary STT usage
+* Fast turn-taking
+
+2. Interruption Handling (Barge-In)
+
+If the agent is speaking and the user starts talking:
+
+* Immediately stop TTS playback
+* Cancel current generation
+* Switch to listening mode
+* Process the new user instruction
+
+Behavior should feel natural and conversational.
+
+3. Conversation Memory
+
+Maintain conversation history:
+
+* system
+* user
+* assistant
+
+Implement rolling history with configurable limit.
+
+Store:
+
+[
+{
+"role": "system",
+"content": "..."
+},
+{
+"role": "user",
+"content": "..."
+}
+]
+
+History should be automatically supplied to Groq.
+
+4. Frontend Synchronization
+
+The React frontend must be able to display:
+
+* User messages
+* Assistant messages
+* Agent state
+
+Use LiveKit Data Channels.
+
+Send structured events:
+
+{
+"type": "user_message",
+"content": "..."
+}
+
+{
+"type": "assistant_message",
+"content": "..."
+}
+
+{
+"type": "agent_state",
+"state": "idle"
+}
+
+{
+"type": "agent_state",
+"state": "listening"
+}
+
+{
+"type": "agent_state",
+"state": "thinking"
+}
+
+{
+"type": "agent_state",
+"state": "speaking"
+}
+
+{
+"type": "agent_state",
+"state": "interrupted"
+}
+
+5. Agent State Machine
+
+Implement:
+
+IDLE
+LISTENING
+THINKING
+SPEAKING
+INTERRUPTED
+
+Provide clean state transitions.
+
+6. Structured Logging
+
+Log:
+
+* User transcripts
+* Assistant responses
+* State transitions
+* Interruptions
+* Errors
+
+Use Python logging.
+
+7. Error Handling
+
+Handle:
+
+* Missing API keys
+* Deepgram failures
+* Groq failures
+* Network errors
+* Invalid room connections
+* Deployment issues
+
+---
+
+## PROJECT STRUCTURE
+
+Generate:
+
+backend/
+│
+├── app/
+│   ├── agent.py
+│   ├── config.py
+│   ├── state.py
+│   ├── models.py
+│   │
+│   ├── services/
+│   │   ├── llm_service.py
+│   │   ├── stt_service.py
+│   │   ├── tts_service.py
+│   │   └── memory_service.py
+│   │
+│   ├── handlers/
+│   │   ├── conversation_handler.py
+│   │   ├── event_handler.py
+│   │   └── interruption_handler.py
+│   │
+│   ├── prompts/
+│   │   └── system_prompt.txt
+│   │
+│   └── utils/
+│
+├── api/
+│   └── main.py
+│
+├── tests/
+│
+├── requirements.txt
+├── Dockerfile
+├── livekit.toml
+├── .env.example
+├── README.md
+
+---
+
+## ENVIRONMENT VARIABLES
+
+Generate a complete `.env.example`.
+
+Include:
+
+LIVEKIT_URL=
+LIVEKIT_API_KEY=
+LIVEKIT_API_SECRET=
+
+DEEPGRAM_API_KEY=
+
+GROQ_API_KEY=
+
+GROQ_MODEL=llama-3.3-70b-versatile
+
+AGENT_NAME=voice-agent
+
+MAX_HISTORY_MESSAGES=20
+
+LOG_LEVEL=INFO
+
+SYSTEM_PROMPT=You are a helpful AI voice assistant.
+
+---
+
+## FASTAPI TOKEN SERVER
+
+Generate a production-ready FastAPI server.
+
+Create endpoint:
+
+POST /token
+
+Requirements:
+
+* Generate LiveKit JWT access token
+* Return JSON
+* CORS enabled
+* Environment variable based configuration
+
+Expected response:
+
+{
+"token": "..."
+}
+
+---
+
+## LLM LAYER
+
+Use Groq.
+
+Implement:
+
+* Streaming responses
+* Configurable model
+* Configurable temperature
+* System prompt support
+* Conversation memory support
+
+Create abstraction:
+
+BaseLLM
+GroqLLM
+
+Future providers should be easy to swap.
+
+---
+
+## STT LAYER
+
+Use Deepgram Streaming STT.
+
+Create abstraction:
+
+BaseSTT
+DeepgramSTT
+
+---
+
+## TTS LAYER
+
+Use Deepgram TTS.
+
+Create abstraction:
+
+BaseTTS
+DeepgramTTS
+
+---
+
+## LIVEKIT AGENT REQUIREMENTS
+
+Use latest LiveKit Agents SDK patterns.
+
+Agent must:
+
+* Auto join assigned rooms
+* Publish speech responses
+* Stream audio
+* Stream text events to frontend
+* Support interruptions
+* Support VAD
+
+Generate complete working implementation.
+
+---
+
+## DEPLOYMENT
+
+Generate:
+
+1. Dockerfile
+2. livekit.toml
+3. requirements.txt
+4. Local development instructions
+5. LiveKit Cloud deployment instructions
+
+Commands should include:
+
+lk cloud auth
+
+lk agent dev
+
+lk agent deploy
+
+---
+
+## FINAL REQUIREMENT
+
+The generated backend must be production-ready and runnable after:
+
+1. Creating `.env`
+2. Adding API keys
+3. Running:
+
+pip install -r requirements.txt
+
+4. Running:
+
+lk agent dev
+
+No manual code modifications should be required after generation.

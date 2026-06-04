@@ -1,0 +1,61 @@
+# --------------------
+# ENV FILES (IMPORTANT)
+# --------------------
+.env
+.env.*
+*.env
+
+# --------------------
+# PYTHON
+# --------------------
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+
+# --------------------
+# NODE / FRONTEND
+# --------------------
+node_modules/
+dist/
+build/
+out/
+.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --------------------
+# ZIP FILES (optional)
+# --------------------
+*.zip
+
+# --------------------
+# OS FILES
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# VS CODE
+# --------------------
+.vscode/
+
+# --------------------
+# LAMBDA / DEPLOYMENT
+# --------------------
+*.tar.gz
+*.egg-info/
+.cache/
+
+# --------------------
+# LOGS
+# --------------------
+logs/
+*.log
+
+browser_agent_frontend_local
+Algoflow_python_agent_local

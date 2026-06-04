@@ -1,0 +1,19 @@
+{
+  "name": "browser_agent_frontend",
+  "version": "1.0.0",
+  "main": "token_server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "aws s3 sync . s3://agent-browser --delete --exclude \"node_modules/*\" --exclude \".git/*\" --exclude \"*.log\" --region ap-south-2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "livekit-server-sdk": "^2.15.0"
+  }
+}
