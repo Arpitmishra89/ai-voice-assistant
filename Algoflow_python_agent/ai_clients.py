@@ -7,6 +7,7 @@ import sys
 from livekit.plugins.deepgram import STT as DeepgramSTT, TTS as DeepgramTTS
 from livekit.plugins.groq import LLM as GroqLLM
 from livekit.plugins.silero import VAD as SileroVAD
+from livekit.plugins import sarvam
 
 
 _initialized = False
@@ -34,11 +35,10 @@ def _ensure_env():
 
 def create_stt():
     _ensure_env()
-    return DeepgramSTT(
-        model="nova-3",
-        language="en-US",
-        smart_format=True,
-        interim_results=True,
+    return sarvam.STT(
+        language="hi-IN",
+        model="saarika:v2.5",
+        mode="transcribe",
     )
 
 
@@ -52,8 +52,13 @@ def create_llm():
 
 def create_tts():
     _ensure_env()
-    return DeepgramTTS(
-        model="aura-asteria-en",
+    return sarvam.TTS(
+        target_language_code="hi-IN",
+        model="bulbul:v3",
+        speaker="shubh",
+        speech_sample_rate=22050,
+        min_buffer_size=50,
+        max_chunk_length=150,
     )
 
 
