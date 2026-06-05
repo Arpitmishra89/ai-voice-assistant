@@ -36,29 +36,73 @@ export function useConversation(): ConversationHook {
     [addMessage],
   );
 
-  const updateOrAddUserMessage = useCallback(
-    (content: string, isFinal: boolean) => {
-      if (isFinal) {
+const updateOrAddUserMessage = useCallback(
+  (content: string, isFinal: boolean) => {
+    const current = messagesRef.current;
+    const lastIdx = current.length - 1;
+    const lastMessage = current[lastIdx];
+
+    if (isFinal) {
+      // If we already have a partial user message,
+      // replace it with the final transcript
+      if (
+        hasPartialRef.current &&
+        lastIdx >= 0 &&
+        lastMessage?.role === "user"
+      ) {
+        const updated = [...current];
+
+        updated[lastIdx] = {
+          ...updated[lastIdx]!,
+          content,
+        };
+
+        messagesRef.current = updated;
+        setMessages(updated);
+
         hasPartialRef.current = false;
-        addMessage("user", content);
-      } else {
-        if (hasPartialRef.current) {
-          const current = messagesRef.current;
-          const lastIdx = current.length - 1;
-          if (lastIdx >= 0 && current[lastIdx]?.role === "user") {
-            const updated = [...current];
-            updated[lastIdx] = { ...updated[lastIdx]!, content };
-            messagesRef.current = updated;
-            setMessages(updated);
-            return;
-          }
-        }
-        hasPartialRef.current = true;
-        addMessage("user", content);
+        return;
       }
-    },
-    [addMessage],
-  );
+
+      // Safety dedupe:
+      // Ignore identical consecutive user messages
+      if (
+        lastMessage &&
+        lastMessage.role === "user" &&
+        lastMessage.content.trim() === content.trim()
+      ) {
+        hasPartialRef.current = false;
+        return;
+      }
+
+      hasPartialRef.current = false;
+      addMessage("user", content);
+      return;
+    }
+
+    // Partial transcript handling
+    if (
+      hasPartialRef.current &&
+      lastIdx >= 0 &&
+      lastMessage?.role === "user"
+    ) {
+      const updated = [...current];
+
+      updated[lastIdx] = {
+        ...updated[lastIdx]!,
+        content,
+      };
+
+      messagesRef.current = updated;
+      setMessages(updated);
+      return;
+    }
+
+    hasPartialRef.current = true;
+    addMessage("user", content);
+  },
+  [addMessage],
+);
 
   const addAssistantMessage = useCallback(
     (content: string) => { addMessage("assistant", content); },

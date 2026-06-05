@@ -132,11 +132,60 @@ class VoiceAssistant(Agent):
         self._turn_logger = TurnLogger()
         self._greeted = False
         self._greeting_lock = asyncio.Lock()
+        self._last_user_transcript = ""
+        self._last_user_time = 0.0
 
-        Agent.__init__(self, instructions=(
-            "You are a warm, concise voice assistant. "
-            "Keep responses short and natural — this is a voice conversation. "
-            "Never mention tools, APIs, or internal processes."
+        Agent.__init__(self, instructions=("""
+            You are a professional hospital receptionist for a modern healthcare clinic.
+
+            Your primary responsibilities are:
+
+            - Welcome patients warmly.
+            - Help patients book appointments.
+            - Collect patient information.
+            - Answer general hospital-related questions.
+            - Guide patients through the appointment process.
+
+            IMPORTANT RULES:
+
+            1. Never provide medical diagnoses.
+            2. Never prescribe medicines.
+            3. Never claim to be a doctor.
+            4. Always recommend consulting a qualified doctor for medical concerns.
+            5. Keep responses short because this is a voice conversation.
+            6. Ask only ONE question at a time.
+
+           When a patient wants to book an appointment, collect the following information step-by-step:
+
+           1. Full Name
+           2. Age
+           3. Gender
+           4. Main health concern or symptoms
+           5. How long they have been experiencing the issue
+           6. Severity of symptoms
+           7. Preferred doctor or department
+           8. Contact number
+
+           Do not ask all questions together.
+
+           After collecting information, summarize it clearly and confirm the appointment request.
+
+          Example:
+
+          Patient: I want to book an appointment.
+
+          Receptionist:
+          Certainly. May I have your full name?
+
+          Patient: Arpit Mishra
+
+          Receptionist:
+          Thank you. What is your age?
+
+          Continue until all required information has been collected.
+
+          Always maintain a polite, professional, and friendly tone."""
+        
         ))
 
     # ── Task tracking ─────────────────────────────────────────────
@@ -308,17 +357,53 @@ async def entrypoint(ctx: JobContext):
 
     @session.on("user_input_transcribed")
     def on_user_input(event):
-        transcript = event.transcript
-        is_final = getattr(event, "is_final", True)
-        if not is_final:
-            is_final = getattr(event, "final", True)
+       transcript = event.transcript.strip()
 
-        if is_final:
-            turn_log.log("STT_FINAL", text=transcript[:80])
-            agent._safe_task(agent.emit_user_message(transcript, is_final=True))
-        else:
-            turn_log.log("STT_PARTIAL", text=transcript[:60])
-            agent._safe_task(agent.emit_user_message(transcript, is_final=False))
+       is_final = getattr(event, "is_final", True)
+
+       if not is_final:
+        is_final = getattr(event, "final", True)
+
+       if is_final:
+        now = time.time()
+
+        if (
+            transcript == agent._last_user_transcript
+            and (now - agent._last_user_time) < 1.5
+        ):
+            turn_log.log(
+                "DUPLICATE_STT_IGNORED",
+                text=transcript[:80],
+            )
+            return
+
+        agent._last_user_transcript = transcript
+        agent._last_user_time = now
+
+        turn_log.log(
+            "STT_FINAL",
+            text=transcript[:80],
+        )
+
+        agent._safe_task(
+            agent.emit_user_message(
+                transcript,
+                is_final=True,
+            )
+        )
+
+       else:
+        turn_log.log(
+            "STT_PARTIAL",
+            text=transcript[:60],
+        )
+
+        agent._safe_task(
+            agent.emit_user_message(
+                transcript,
+                is_final=False,
+            )
+        )
 
     # ── Agent state changes ───────────────────────────────────────
 
