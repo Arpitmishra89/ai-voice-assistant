@@ -245,7 +245,7 @@ class VoiceAssistant(Agent):
             for attempt in range(30):
                 if self._room and self._session:
                     try:
-                        await self._session.say("Hello! How may I help you?")
+                        await self._session.say("नमस्ते। मैं अस्पताल की वर्चुअल रिसेप्शनिस्ट हूँ।")
                         self._greeted = True
                         print("[GREETING] Sent successfully")
                         return
